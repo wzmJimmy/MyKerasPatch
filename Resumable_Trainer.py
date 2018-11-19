@@ -73,7 +73,15 @@ class ResumableTrainer_callback:
         if self.end==self.epochs or self.earlystop and model.stop_training:
             self.stopped = True
         else: model.save(filename, overwrite=True)   
+        self.clear_callbacks()
+            
         return self.history_comb(hist)
+    
+    def clear_callbacks(self):
+        keys = ['validation_data','model']
+        for i in self.callbacks:
+            for j in key:
+                if i[j]: i[j] = None
     
     def history_comb(self,hist):
         self.history.epoch.extend(list(range(self.start+1,self.end+1)))
