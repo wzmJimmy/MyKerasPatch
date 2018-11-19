@@ -80,7 +80,7 @@ class ResumableTrainer_callback:
     def clear_callbacks(self):
         keys = ['validation_data','model']
         for i in self.callbacks:
-            for j in key:
+            for j in keys:
                 if i[j]: i[j] = None
     
     def history_comb(self,hist):
