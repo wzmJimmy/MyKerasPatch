@@ -78,10 +78,9 @@ class ResumableTrainer_callback:
         return self.history_comb(hist)
     
     def clear_callbacks(self):
-        keys = ['validation_data','model']
         for i in self.callbacks:
-            for j in keys:
-                if i[j]: i[j] = None
+            if i.validation_data: i.validation_data = None
+            if i.model: i.model = None
     
     def history_comb(self,hist):
         self.history.epoch.extend(list(range(self.start+1,self.end+1)))
