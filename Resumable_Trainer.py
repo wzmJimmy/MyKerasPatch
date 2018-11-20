@@ -83,8 +83,9 @@ class ResumableTrainer_callback:
             if i.model: i.model = None
     
     def history_comb(self,hist):
-        leng = len(hist.history)
-        self.history.epoch.extend(list(range(self.start+1,self.start+leng+1)))
+        leng = None
         for k, v in hist.history.items():
             self.history.history.setdefault(k, []).extend(v)
+            if leng is None: leng = len(v)
+        self.history.epoch.extend(list(range(self.start+1,self.start+leng+1)))
         return self.history
