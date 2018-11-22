@@ -1,6 +1,7 @@
 import keras
 import numpy as np
 import keras.backend as K
+from keras.callbacks import Callback
 
 ''' 
 'Picklable' version of Keras official ReduceLROnPlateau 
@@ -9,7 +10,7 @@ local lambda to class function.
 Moreover, a @reset option (default True) is added to decide
 resume or not.
 '''
-class ReduceLROnPlateau_picklable(keras.callbacks.Callback):
+class ReduceLROnPlateau_picklable(Callback):
     def __init__(self, monitor='val_loss', factor=0.1, patience=10,reset = True,
                  verbose=0, mode='auto', min_delta=1e-4, cooldown=0, min_lr=0,
                  **kwargs):
@@ -102,14 +103,14 @@ class ReduceLROnPlateau_picklable(keras.callbacks.Callback):
         return self.cooldown_counter > 0
 
 ''' 
-'Picklable' version of Keras official ReduceLROnPlateau 
+'Picklable' version of Keras official EarlyStopping
 Simply add a @reset option (default True) for deciding
 resume or not.
 '''
 class EarlyStopping_picklable(Callback):
     def __init__(self, monitor='val_loss',min_delta=0, patience=0, verbose=0,
                  reset = True,mode='auto',baseline=None,restore_best_weights=False):
-        super(EarlyStopping, self).__init__()
+        super(EarlyStopping_picklable, self).__init__()
 
         self.monitor = monitor
         self.baseline = baseline
