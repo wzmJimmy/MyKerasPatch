@@ -143,15 +143,19 @@ class EarlyStopping_picklable(Callback):
             self.min_delta *= 1
         else:
             self.min_delta *= -1
-
+            
+        self._reset()
+    
+    def _reset(self):
+        self.wait = 0
+        self.stopped_epoch = 0
+        if self.baseline is not None:
+            self.best = self.baseline
+        else:
+            self.best = np.Inf if self.monitor_op == np.less else -np.Inf
+            
     def on_train_begin(self, logs=None):
-        if self.reset:
-            self.wait = 0
-            self.stopped_epoch = 0
-            if self.baseline is not None:
-                self.best = self.baseline
-            else:
-                self.best = np.Inf if self.monitor_op == np.less else -np.Inf
+        if self.reset: self._reset()           
 
     def on_epoch_end(self, epoch, logs=None):
         current = self.get_monitor_value(logs)
