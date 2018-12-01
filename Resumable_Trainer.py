@@ -1,4 +1,5 @@
 import pickle
+from keras.models import load_model
 from Serialized_Callback  import History_resumable as History
         
 ''' #Resumable Trainer with callbacks#
@@ -25,7 +26,8 @@ from Serialized_Callback  import History_resumable as History
 -> A 'isStopped'function is offered to check stop.
 '''        
 class ResumableTrainer_callback:
-    def __init__(self,epochs,ep_turn,pickle_path,start_epoch = 0,earlystop=False,callbacks=None):
+    def __init__(self,epochs,ep_turn,pickle_path,start_epoch = 0,earlystop=False,callbacks=None,
+                 custom_objects = None):
         self.epochs = epochs
         self.ep_turn = ep_turn
         self.pickle_path = pickle_path
@@ -33,6 +35,7 @@ class ResumableTrainer_callback:
         self.history = History()
         self.callbacks = callbacks
         self.earlystop = earlystop
+        self.custom_objects = custom_objects
         self.stopped = False
         
     def isStopped(self):
@@ -63,6 +66,9 @@ class ResumableTrainer_callback:
             if i.model: i.model = None
 
     def save_trainer(self):
-        self.start_epoch = self.history.epoch[-1]+1
+        if self.history.epoch: self.start_epoch = self.history.epoch[-1]+1
         with open(self.pickle_path, 'wb') as f:
             pickle.dump(self, f)
+
+    def load(self,path):
+        return load_model(path, custom_objects=self.custom_objects)
