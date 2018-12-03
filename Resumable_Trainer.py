@@ -56,7 +56,16 @@ class ResumableTrainer_callback:
         model.save(filename, overwrite=True)
         self.clear_callbacks()
         self.save_trainer()
-            
+        return self.history
+
+    def train_generator(self, model, filename, *para, **kpara):
+        self.new_turn()
+        model.fit_generator(*para, **kpara, initial_epoch=self.start, epochs=self.end, callbacks=[self.history] + self.callbacks)
+
+        self.stopped = self.end == self.epochs or self.earlystop and model.stop_training
+        model.save(filename, overwrite=True)
+        self.clear_callbacks()
+        self.save_trainer()
         return self.history
     
     def clear_callbacks(self):
